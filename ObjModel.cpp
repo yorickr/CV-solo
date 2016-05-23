@@ -14,7 +14,7 @@
 #include <GLUT/glut.h>
 
 //TODO: Remove me before the final release
-#define DRAW_BOUNDING_BOX true
+#define DRAW_BOUNDING_BOX false
 
 
 std::string replace(std::string str, std::string toReplace, std::string replacement) {
@@ -51,10 +51,6 @@ inline std::string toLower(std::string data) {
 
 ObjModel::ObjModel(std::string fileName) {
     xpos = ypos = zpos = xrot = yrot = zrot = 0;
-//Fix for the OSX project, because our paht starts from shiro-bougyo instead of Project
-#ifdef __APPLE__
-    fileName = "Project/" + fileName;
-#endif
 
     std::string dirName = fileName;
     if (dirName.rfind("/") != std::string::npos)
