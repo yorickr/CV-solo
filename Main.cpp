@@ -7,6 +7,7 @@
 
 #include "Camera.h"
 #include "ObjModel.h"
+#include "Baseball.h"
 
 
 bool keys[255];
@@ -62,6 +63,10 @@ void onTimer(int id) {
 	if (keys['w']) camera.posZ++;
 	if (keys['s']) camera.posZ--;
 
+    for(auto &m : models) {
+        m->update();
+    }
+
 	glutTimerFunc(1000 / 60, onTimer, 1);
 }
 
@@ -106,8 +111,15 @@ void mousePassiveMotion(int x, int y) {
 void mouseFunc(int button, int state, int x, int y) {
     printf("Received %d %d \n", button, state);
     if (button == 0 && state == 1) {
-        //Tell gamestatemanager to shoot arrow
+        //Throw ball
+        printf("Angle x: %f\n", camera.rotX);
 
+        ObjModel *obj = new Baseball();
+        obj->scale = 50;
+        obj->xpos =camera.posX;
+        obj->ypos = camera.posY;
+        obj->zpos = camera.posZ;
+        models.push_back(obj);
     }
 }
 
@@ -117,6 +129,10 @@ void init(){
 	obj1->ypos = -20;
 	obj1->yrot = 180;
 	models.push_back(obj1);
+
+//    obj1 = new Baseball();
+//    obj1->scale = 50;
+//    models.push_back(obj1);
 }
 
 void turnOnFog(){
@@ -134,7 +150,7 @@ int main(int argc, char* argv[]) {
 	glutCreateWindow("Shiro Bougyo");
 
 	glEnable(GL_DEPTH_TEST);
-	glutFullScreen();
+//	glutFullScreen();
 	glutSetCursor(GLUT_CURSOR_NONE);
 	CGSetLocalEventsSuppressionInterval(0.0);
 	glutIdleFunc(onIdle);

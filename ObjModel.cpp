@@ -14,7 +14,7 @@
 #include <GLUT/glut.h>
 
 //TODO: Remove me before the final release
-#define DRAW_BOUNDING_BOX false
+#define DRAW_BOUNDING_BOX true
 
 
 std::string replace(std::string str, std::string toReplace, std::string replacement) {
@@ -229,11 +229,14 @@ void ObjModel::draw() {
     //glColor
     glPushMatrix();
 
+    glScalef(scale, scale, scale);
+
     glTranslatef(xpos, ypos, zpos);
 
     glRotatef(xrot, 1, 0, 0);
     glRotatef(yrot, 0, 1, 0);
     glRotatef(zrot, 0, 0, 1);
+
 
 //	glTranslatef(xpos, ypos, zpos);
 
@@ -254,6 +257,7 @@ void ObjModel::draw() {
             }
         }
         glEnd();
+        glDisable(GL_TEXTURE_2D);
     }
 
     if (DRAW_BOUNDING_BOX) {
@@ -372,10 +376,7 @@ bool ObjModel::CollidesWith(ObjModel *obj2) {
 }
 
 void ObjModel::update() {
-    yrot += 0.5;
-    if (xpos > 5) {
-        xpos = -5;
-    }
+//    yrdraw
 }
 
 void ObjModel::InitBoundingSpheres() {

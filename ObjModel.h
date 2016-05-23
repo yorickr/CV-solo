@@ -123,6 +123,8 @@ public:
         float pos[3];
     };
 
+    float scale = 1;
+
     class Sphere {
     public:
         Sphere(float x, float y, float z, float radius);
