@@ -13,7 +13,10 @@
 bool keys[255];
 Camera camera;
 
-vector<ObjModel*> models;
+int oldTimeSinceStart = 0;
+#define DELTATIME_MODIFIER 10
+
+void turnOnFog();
 
 void onDisplay() {
 	glClearColor(0.6f, 0.6f, 1, 1);
@@ -40,8 +43,8 @@ void onDisplay() {
 	glColor3f(1.0f, 1.0f, 1.0f);
 //	gameManager.Draw();
 	//Draw objects here
-
-	for(auto & model : models) {
+	turnOnFog();
+	for(auto & model : Singleton::Instance()->models) {
 		model->draw();
 	}
 
@@ -57,16 +60,19 @@ void onIdle() {
 
 void onTimer(int id) {
 //	gameManager.Update();
-
+	int timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
 	if (keys['a']) camera.posX++;
 	if (keys['d']) camera.posX--;
 	if (keys['w']) camera.posZ++;
 	if (keys['s']) camera.posZ--;
 
-    for(auto &m : models) {
-        m->update();
-    }
+	float deltatime = (timeSinceStart - oldTimeSinceStart) /  DELTATIME_MODIFIER;
 
+
+    for(auto &m : Singleton::Instance()->models) {
+        m->update(deltatime);
+    }
+	oldTimeSinceStart = timeSinceStart;
 	glutTimerFunc(1000 / 60, onTimer, 1);
 }
 
@@ -114,25 +120,31 @@ void mouseFunc(int button, int state, int x, int y) {
         //Throw ball
         printf("Angle x: %f\n", camera.rotX);
 
-        ObjModel *obj = new Baseball();
+        ObjModel *obj = new Baseball(Singleton::Instance());
         obj->scale = 50;
-        obj->xpos =camera.posX;
-        obj->ypos = camera.posY;
-        obj->zpos = camera.posZ;
-        models.push_back(obj);
+        obj->xpos = -camera.posX;
+        obj->ypos = -camera.posY;
+        obj->zpos = -camera.posZ;
+		obj->yrot = -camera.rotY - 180;
+		if (obj->yrot > 90 || obj->yrot < -90)
+			obj->xrot = -camera.rotX;
+		else
+			obj->xrot = camera.rotX;
+        Singleton::Instance()->models.push_back(obj);
     }
 }
 
 void init(){
-	ObjModel *obj1 = new ObjModel("models/cottage/scco.obj");
+
+	ObjModel *obj1 = new ObjModel("models/cottage/scco.obj", Singleton::Instance());
 	obj1->zpos = -100;
 	obj1->ypos = -20;
 	obj1->yrot = 180;
-	models.push_back(obj1);
+	Singleton::Instance()->models.push_back(obj1);
 
 //    obj1 = new Baseball();
 //    obj1->scale = 50;
-//    models.push_back(obj1);
+//    Singleton::Instance()->models.push_back(obj1);
 }
 
 void turnOnFog(){

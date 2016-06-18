@@ -8,6 +8,7 @@
 
 #include <OpenGL/OpenGL.h>
 #include <GLUT/glut.h>
+#include "Singleton.h"
 
 #else
 #include <windows.h>
@@ -154,11 +155,15 @@ public:
 
     virtual void InitBoundingSpheres();
 
-    ObjModel(std::string filename);
+    ObjModel(std::string filename, Singleton *s);
 
     ~ObjModel(void);
 
     virtual void draw();
 
-    virtual void update();
+    Singleton* s;
+
+    ObjModel* obj;
+
+    virtual void update(float deltatime);
 };

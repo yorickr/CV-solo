@@ -49,9 +49,9 @@ inline std::string toLower(std::string data) {
 }
 
 
-ObjModel::ObjModel(std::string fileName) {
+ObjModel::ObjModel(std::string fileName, Singleton* s): s(s) {
     xpos = ypos = zpos = xrot = yrot = zrot = 0;
-
+    this->obj = this;
     std::string dirName = fileName;
     if (dirName.rfind("/") != std::string::npos)
         dirName = dirName.substr(0, dirName.rfind("/"));
@@ -375,7 +375,7 @@ bool ObjModel::CollidesWith(ObjModel *obj2) {
     return retval;
 }
 
-void ObjModel::update() {
+void ObjModel::update(float deltatime) {
 //    yrdraw
 }
 

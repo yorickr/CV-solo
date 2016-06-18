@@ -5,15 +5,14 @@
 #ifndef CV_SOLO_BASEBALL_H
 #define CV_SOLO_BASEBALL_H
 
-
 #include "ObjModel.h"
 
 class Baseball : public ObjModel {
 public:
-    Baseball();
-
-    virtual void update() override;
-
+    Baseball(Singleton *s);
+    float toRadian(float degree);
+    virtual void update(float deltatime) override;
+    float time_alive_counter = 0;
 };
 
 
