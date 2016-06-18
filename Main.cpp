@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "ObjModel.h"
 #include "Baseball.h"
+#include "Player.h"
 
 
 bool keys[255];
@@ -140,7 +141,14 @@ void init(){
 	obj1->zpos = -100;
 	obj1->ypos = -20;
 	obj1->yrot = 180;
+
+	ObjModel* player = new Player();
+	player->xpos = 0;
+	player->ypos = 0;
+	player->zpos = -30;
+
 	Singleton::Instance()->models.push_back(obj1);
+	Singleton::Instance()->models.push_back(player);
 
 //    obj1 = new Baseball();
 //    obj1->scale = 50;

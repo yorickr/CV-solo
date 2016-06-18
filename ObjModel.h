@@ -4,18 +4,11 @@
 #include <vector>
 #include <list>
 
-#ifdef __APPLE__
 
 #include <OpenGL/OpenGL.h>
 #include <GLUT/glut.h>
 #include "Singleton.h"
 
-#else
-#include <windows.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
-#endif
 
 
 using namespace std;

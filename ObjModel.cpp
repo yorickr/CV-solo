@@ -14,7 +14,7 @@
 #include <GLUT/glut.h>
 
 //TODO: Remove me before the final release
-#define DRAW_BOUNDING_BOX true
+#define DRAW_BOUNDING_BOX false
 
 
 std::string replace(std::string str, std::string toReplace, std::string replacement) {
@@ -52,6 +52,11 @@ inline std::string toLower(std::string data) {
 ObjModel::ObjModel(std::string fileName, Singleton* s): s(s) {
     xpos = ypos = zpos = xrot = yrot = zrot = 0;
     this->obj = this;
+
+    if(fileName == ""){
+        return;
+    }
+
     std::string dirName = fileName;
     if (dirName.rfind("/") != std::string::npos)
         dirName = dirName.substr(0, dirName.rfind("/"));
