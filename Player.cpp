@@ -6,7 +6,8 @@
 
 Player::Player() : ObjModel("", Singleton::Instance()) {
     //no model
-
+    boundingSpheres.clear();
+    Player::InitBoundingSpheres();
 }
 
 void Player::InitBoundingSpheres() {
@@ -14,7 +15,11 @@ void Player::InitBoundingSpheres() {
 }
 
 void Player::CalcBoundingSpheres() {
-    ObjModel::CalcBoundingSpheres();
+    for (auto &sphere : boundingSpheres) {
+        sphere->xpos = sphere->x + this->xpos;
+        sphere->ypos = sphere->y + this->ypos;
+        sphere->zpos = sphere->z + this->zpos;
+    }
 }
 
 void Player::draw() {
@@ -23,6 +28,14 @@ void Player::draw() {
     glColor3ub(0, 255, 255);
     glutWireSphere(RADIUS, 20, 20); //Radius, polycount, polycount
     glPopMatrix();
+
+//    glPushMatrix();
+//    for (auto &sphere : boundingSpheres) {
+//        glTranslatef(sphere->xpos, sphere->ypos, sphere->zpos);
+//        glColor3ub(0, 255, 255);
+//        glutWireSphere(sphere->radius, 50, 50);
+//    }
+//    glPopMatrix();
 }
 
 

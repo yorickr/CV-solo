@@ -5,6 +5,7 @@
 #include <zconf.h>
 #include <thread>
 #include "HeadTracking.h"
+#include "Player.h"
 
 using namespace cv;
 
@@ -22,15 +23,6 @@ HeadTracking::~HeadTracking() {
 HeadTracking::HeadTracking() {
 }
 
-bool isSamePoint(Point p1, Point p2) {
-    if (abs(p1.x - p2.x) < 10 &&
-        abs(p1.y - p2.y) < 10) {
-        //This is the same rectangle
-//
-        return true;
-    }
-    return false;
-}
 
 // Detect face
 std::vector<Point> detectFace(Mat frame) {
@@ -55,24 +47,32 @@ std::vector<Point> detectFace(Mat frame) {
     return retFaces;
 }
 
-float calcHeadPos(int pos, int camwidth) {
-    return (pos / (float) camwidth) * 2.0f - 1.0f;
+int calcHeadPos(int pos, int camwidth) {
+    return (int) ((float)((float)pos / (float)camwidth) * 60.0f - 30.0f);
 }
 
 void HeadTracking::cameraThreadFunc() {
-    VideoCapture cap(1); // capture from default camera
+
+    VideoCapture cap(0); // capture from default camera
     Mat frame;
     int camWidth = 640, camHeight = 480;
     cap.set(CV_CAP_PROP_FRAME_WIDTH, camWidth);
     cap.set(CV_CAP_PROP_FRAME_HEIGHT, camHeight);
 
-    face_cascade.load("Project/opencv_xml/haarcascade_frontalface_alt.xml"); // load face classifiers
+    face_cascade.load("xml/haarcascade_frontalface_alt.xml"); // load face classifiers
 //    eyes_cascade.load("Project/opencv_xml/haarcascade_eye_tree_eyeglasses.xml"); // load eye classifiers
 
     std::vector<Point> points;
     while (cap.read(frame)) {
         if (!frame.empty()) {
             points = detectFace(frame);
+            for (auto &m:points) {
+                if(running){
+                    Player *p = Singleton::Instance()->p;
+//                    printf("Settings xpos to %d\n", calcHeadPos(m.x,camWidth));
+                    p->xpos = calcHeadPos(m.x,camWidth);
+                }
+            }
             usleep(1000 * (1000 / 100));
         }
     }

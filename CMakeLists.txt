@@ -7,7 +7,7 @@ file(GLOB SOURCE_FILES
         "*.h"
         "*.cpp"
         )
-add_executable(CV_solo ${SOURCE_FILES} Baseball.cpp Baseball.h Singleton.cpp Singleton.h Player.cpp Player.h)
+add_executable(CV_solo ${SOURCE_FILES} Baseball.cpp Baseball.h Singleton.cpp Singleton.h Player.cpp Player.h House.cpp House.h)
 
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)

@@ -8,12 +8,13 @@
 #include <algorithm>
 #include <vector>
 class ObjModel;
+class Player;
 
 class Singleton{
 public:
     static Singleton* Instance();
     std::vector<ObjModel*> models;
-
+    Player *p;
     void DeleteModel(ObjModel* obj);
 
 private:

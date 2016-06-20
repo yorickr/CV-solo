@@ -15,6 +15,7 @@ class HeadTracking {
 public:
     HeadTracking();
 
+    bool running = false;
     ~HeadTracking();
     void cameraThreadFunc();
     void initThread();
