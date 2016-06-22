@@ -149,6 +149,8 @@ public:
     virtual void InitBoundingSpheres();
 
     ObjModel(std::string filename, Singleton *s);
+    ObjModel() { }
+
 
     ~ObjModel(void);
 

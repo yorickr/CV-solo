@@ -69,7 +69,7 @@ ObjModel::ObjModel(std::string fileName, Singleton* s): s(s) {
     std::ifstream pFile(fileName.c_str());
 
     if (!pFile.is_open()) {
-        std::cout << "Could not open file " << fileName << std::endl;
+        //std::cout << "Could not open file " << fileName << std::endl;
         return;
     }
 
@@ -150,11 +150,13 @@ ObjModel::ObjModel(std::string fileName, Singleton* s): s(s) {
                     break;
                 }
             }
-            if (currentGroup->materialIndex == -1)
-                std::cout << "Could not find material name " << params[1] << std::endl;
+            if (currentGroup->materialIndex == -1) {
+                //std::cout << "Could not find material name " << params[1] << std::endl;
+            }
         }
     }
     groups.push_back(currentGroup);
+
     CalcMinVertex();
     CalcMaxVertex();
     InitBoundingSpheres();
@@ -187,7 +189,7 @@ void ObjModel::CalcMinVertex() {
             smallestz = vertice->z;
         }
     }
-    printf("What I've found:\n %f %f %f\n", smallestx, smallesty, smallestz);
+    //printf("What I've found:\n %f %f %f\n", smallestx, smallesty, smallestz);
 
     //Transform it into a vertex.
     vertices_min = new Vec3f(smallestx, smallesty, smallestz);
@@ -221,7 +223,7 @@ void ObjModel::CalcMaxVertex() {
         }
     }
 
-    printf("What I've found:\n %f %f %f\n", maxx, maxy, maxz);
+    //printf("What I've found:\n %f %f %f\n", maxx, maxy, maxz);
     vertices_max = new Vec3f(maxx, maxy, maxz);
 }
 
@@ -241,10 +243,6 @@ void ObjModel::draw() {
     glRotatef(xrot, 1, 0, 0);
     glRotatef(yrot, 0, 1, 0);
     glRotatef(zrot, 0, 0, 1);
-
-
-//	glTranslatef(xpos, ypos, zpos);
-
 
 
     for (auto &g : groups) {
@@ -314,7 +312,7 @@ void ObjModel::draw() {
 void ObjModel::loadMaterialFile(std::string fileName, std::string dirName) {
     std::ifstream pFile(fileName.c_str());
     if (!pFile.is_open()) {
-        std::cout << "Could not open file " << fileName << std::endl;
+        //std::cout << "Could not open file " << fileName << std::endl;
         return;
     }
 
@@ -352,10 +350,11 @@ void ObjModel::loadMaterialFile(std::string fileName, std::string dirName) {
         else if (params[0] == "map_kd") {
             currentMaterial->hasTexture = true;
             currentMaterial->texture = new Texture(dirName + "/" + params[1]);
-            std::cout << "Made material named " << params[1] << std::endl;
+            //std::cout << "Made material named " << params[1] << std::endl;
         }
-        else
-            std::cout << "Didn't parse " << params[0] << " in material file" << std::endl;
+        else{
+            //std::cout << "Didn't parse " << params[0] << " in material file" << std::endl;
+            }
     }
     if (currentMaterial != NULL)
         materials.push_back(currentMaterial);
@@ -403,29 +402,29 @@ void ObjModel::InitBoundingSpheres() {
     y = height / 2+vertices_min->y;
     z = depth / 2+vertices_min->z;
 
-    printf("Width = %f\n",width);
-    printf("Height = %f\n",height);
-    printf("Depth = %f\n",depth);
+    //printf("Width = %f\n",width);
+    //printf("Height = %f\n",height);
+    //printf("Depth = %f\n",depth);
 
     if( width>=height && width>=depth ){
         //Use width
-        printf("Using width\n");
+        //printf("Using width\n");
         boundingSpheres.push_back(new Sphere(x, y, z, width/2));
     }
 
     if( height>=width && height>=depth ) {
         //Use height
-        printf("Using height\n");
+        //printf("Using height\n");
         boundingSpheres.push_back(new Sphere(x, y, z, height/2));
     }
 
     if( depth>=width && depth>=height ) {
         //Use depth
-        printf("Using depth\n");
+        //printf("Using depth\n");
         boundingSpheres.push_back(new Sphere(x, y, z, depth/2));
     }
 
-    printf("Called base\n");
+    //printf("Called base\n");
 
 
 }
@@ -435,6 +434,8 @@ void ObjModel::CalcBoundingSpheres() {
         sphere->xpos = sphere->x + this->xpos;
         sphere->ypos = sphere->y + this->ypos;
         sphere->zpos = sphere->z + this->zpos;
+//        //printf("sphere-> x y z %f %f %f\n", sphere->xpos, sphere->ypos, sphere->zpos);
+//        //printf("this-> x y z %f %f %f\n", this->xpos, this->ypos, this->zpos);
     }
 }
 

@@ -8,7 +8,7 @@
 
 #include "ObjModel.h"
 
-#define RADIUS 5
+#define RADIUS 2.5
 
 class Player : public ObjModel{
 

@@ -20,6 +20,8 @@ int oldTimeSinceStart = 0;
 
 HeadTracking *h;
 
+int timeSinceLastBall = 0;
+
 void onDisplay() {
     glClearColor(0.6f, 0.6f, 1, 1);
     glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -54,13 +56,23 @@ void onDisplay() {
     glutSwapBuffers();
 }
 
-void onIdle() {
+void shootBall(float xpos, float ypos, float zpos, float xrot, float yrot){
+    ObjModel *obj = new Baseball(Singleton::Instance());
+//        obj->scale = 50;
+    obj->xpos = -xpos;
+    obj->ypos = -ypos;
+    obj->zpos = -zpos;
+    obj->yrot = -yrot - 180;
+    if (obj->yrot > 90 || obj->yrot < -90)
+        obj->xrot = -xrot;
+    else
+        obj->xrot = xrot;
 
-    glutPostRedisplay();
+    printf("Ball pos and such\n %f %f %f %f %f", obj->xpos, obj->ypos, obj->zpos, obj->xrot, obj->yrot);
+    Singleton::Instance()->models.push_back(obj);
 }
 
-void onTimer(int id) {
-//	gameManager.Update();
+void onIdle() {
     int timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
     if (keys['a']) camera.posX++;
     if (keys['d']) camera.posX--;
@@ -68,6 +80,21 @@ void onTimer(int id) {
     if (keys['s']) camera.posZ--;
     if(keys['c']) h->running = false;
     if(keys['v']) h->running = true;
+    Player* p = Singleton::Instance()->p;
+    if(keys['g']) {
+        printf("xpos %f\n", p->xpos);
+        if (p->xpos > -30 && p->xpos <= 30) {
+            //move backward
+            p->xpos--;
+        }
+    }
+    if(keys['h']) {
+        printf("xpos %f\n", p->xpos);
+        if (p->xpos >= -30 && p->xpos < 30) {
+            //move backward
+            p->xpos++;
+        }
+    }
 
     float deltatime = (timeSinceStart - oldTimeSinceStart) / DELTATIME_MODIFIER;
 
@@ -94,17 +121,27 @@ void onTimer(int id) {
         if (m != Singleton::Instance()->p && m->CollidesWith(Singleton::Instance()->p)) {
             playercollides = true;
         }
-        printf("Collides wit player? %d\n", playercollides);
+//        printf("Collides wit player? %d\n", playercollides);
         if (playercollides) {
             //End of game
+            printf("You lose ;)\n");
             exit(0);
         }
         playercollides = false;
     }
 
+    //Spawn balls
+
+    if(timeSinceStart - timeSinceLastBall >5000) {
+        std::srand((unsigned int) glutGet(GLUT_ELAPSED_TIME));
+        int rand = -1 * ((std::rand() % 60) - 30);
+        shootBall(rand, 0, 0, 0, 0);
+
+        timeSinceLastBall = glutGet(GLUT_ELAPSED_TIME);
+    }
 
     oldTimeSinceStart = timeSinceStart;
-    glutTimerFunc(1000 / 60, onTimer, 1);
+    glutPostRedisplay();
 }
 
 void onKeyboard(unsigned char key, int, int) {
@@ -147,19 +184,7 @@ void mouseFunc(int button, int state, int x, int y) {
     printf("Received %d %d \n", button, state);
     if (button == 0 && state == 1) {
         //Throw ball
-        printf("Angle x: %f\n", camera.rotX);
-
-        ObjModel *obj = new Baseball(Singleton::Instance());
-        obj->scale = 50;
-        obj->xpos = -camera.posX;
-        obj->ypos = -camera.posY;
-        obj->zpos = -camera.posZ;
-        obj->yrot = -camera.rotY - 180;
-        if (obj->yrot > 90 || obj->yrot < -90)
-            obj->xrot = -camera.rotX;
-        else
-            obj->xrot = camera.rotX;
-        Singleton::Instance()->models.push_back(obj);
+        shootBall(camera.posX, camera.posY, camera.posZ, camera.rotX, camera.rotY);
     }
 }
 
@@ -223,7 +248,6 @@ int main(int argc, char *argv[]) {
         glViewport(0, 0, w, h);
     });
     glutKeyboardFunc(onKeyboard);
-    glutTimerFunc(1000 / 60, onTimer, 1);
     glutKeyboardUpFunc(onKeyboardUp);
     glutPassiveMotionFunc(mousePassiveMotion);
     glutMouseFunc(mouseFunc);
